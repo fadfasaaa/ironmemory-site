@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IronMemory — OpenClaw × Super Brain</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:     #04060f;
+      --cyan:   #00e5ff;
+      --cyan2:  #00b8d4;
+      --gold:   #ffc845;
+      --white:  #e8f0ff;
+      --dim:    rgba(232,240,255,.45);
+      --glass:  rgba(4,6,15,.65);
+      --border: rgba(0,229,255,.18);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Space Grotesk', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── Loading overlay ─────────────────────────────────────── */
+    #loading {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--bg);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 28px;
+      transition: opacity .6s ease;
+    }
+    #loading.hidden { opacity: 0; pointer-events: none; }
+
+    .load-logo {
+      font-size: 1.1rem; font-weight: 600; letter-spacing: .25em;
+      color: var(--cyan); text-transform: uppercase;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .load-logo span { color: var(--white); opacity: .7; font-weight: 300; }
+
+    .load-bar-wrap {
+      width: 260px; height: 2px;
+      background: rgba(0,229,255,.15);
+      border-radius: 99px; overflow: hidden;
+    }
+    .load-bar {
+      height: 100%; width: 0;
+      background: linear-gradient(90deg, var(--cyan2), var(--cyan), var(--gold));
+      border-radius: 99px;
+      transition: width .25s ease;
+      box-shadow: 0 0 12px var(--cyan);
+    }
+    .load-pct {
+      font-size: .78rem; letter-spacing: .12em;
+      color: var(--dim); font-weight: 300;
+    }
+
+    /* ── Scroll progress bar ─────────────────────────────────── */
+    #prog-bar {
+      position: fixed; top: 0; left: 0; z-index: 800;
+      height: 2px; width: 0;
+      background: linear-gradient(90deg, var(--cyan2), var(--cyan), var(--gold));
+      box-shadow: 0 0 8px var(--cyan);
+      transition: width 0s;
+      pointer-events: none;
+    }
+
+    /* ── Nav ─────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 700;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 36px;
+      background: linear-gradient(to bottom, rgba(4,6,15,.9), transparent);
+      backdrop-filter: blur(0px);
+    }
+    .nav-logo {
+      font-size: .95rem; font-weight: 700; letter-spacing: .2em;
+      color: var(--cyan); text-transform: uppercase;
+    }
+    .nav-logo em { color: var(--white); font-style: normal; opacity: .6; }
+    .nav-cta {
+      padding: 8px 22px; border-radius: 6px;
+      background: transparent; border: 1px solid var(--border);
+      color: var(--cyan); font-family: inherit; font-size: .82rem;
+      font-weight: 600; letter-spacing: .08em; cursor: pointer;
+      text-decoration: none;
+      transition: background .2s, border-color .2s, box-shadow .2s;
+    }
+    .nav-cta:hover {
+      background: rgba(0,229,255,.08);
+      border-color: var(--cyan);
+      box-shadow: 0 0 18px rgba(0,229,255,.25);
+    }
+
+    /* ── Scroll animation section ────────────────────────────── */
+    #scroll-container {
+      position: relative;
+      height: 500vh;
+    }
+
+    #sticky-wrap {
+      position: sticky; top: 0;
+      height: 100vh; width: 100%;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* deep space bg radial */
+    #sticky-wrap::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 80% at 50% 50%,
+        rgba(0,40,80,.35) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    #frame-canvas {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      /* mask creates floating / vignette effect */
+      mask-image: radial-gradient(ellipse 72% 68% at 50% 50%,
+        black 42%, transparent 78%);
+      -webkit-mask-image: radial-gradient(ellipse 72% 68% at 50% 50%,
+        black 42%, transparent 78%);
+      will-change: transform;
+    }
+
+    /* ── Phase cards ─────────────────────────────────────────── */
+    .phase-card {
+      position: absolute;
+      max-width: 320px;
+      padding: 20px 24px;
+      border-radius: 14px;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity .4s ease, transform .4s ease;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .phase-card.visible {
+      opacity: 1; transform: translateY(0);
+    }
+    .phase-card .tag {
+      display: inline-block; margin-bottom: 10px;
+      padding: 3px 10px; border-radius: 99px;
+      font-size: .68rem; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase;
+      background: rgba(0,229,255,.12); color: var(--cyan);
+      border: 1px solid rgba(0,229,255,.3);
+    }
+    .phase-card h3 {
+      font-size: 1.1rem; font-weight: 700; margin-bottom: 6px;
+      color: var(--white); line-height: 1.3;
+    }
+    .phase-card p {
+      font-size: .82rem; line-height: 1.55;
+      color: var(--dim); font-weight: 300;
+    }
+    .phase-card .metric {
+      margin-top: 12px;
+      display: flex; align-items: baseline; gap: 6px;
+    }
+    .phase-card .metric strong {
+      font-size: 1.6rem; font-weight: 700; color: var(--cyan);
+    }
+    .phase-card .metric span {
+      font-size: .75rem; color: var(--dim);
+    }
+
+    /* card positions */
+    #phase-1 { bottom: 16%; left: 5%; }
+    #phase-2 { top: 18%;  right: 5%; }
+    #phase-3 { bottom: 16%; right: 5%; }
+    #phase-4 { bottom: 10%; left: 50%; transform: translateX(-50%) translateY(12px); max-width: 420px; }
+    #phase-4.visible { transform: translateX(-50%) translateY(0); }
+    #phase-4 .tag { background: rgba(255,200,69,.12); color: var(--gold); border-color: rgba(255,200,69,.3); }
+    #phase-4 h3 { font-size: 1.2rem; }
+
+    /* ── Scroll hint ─────────────────────────────────────────── */
+    #scroll-hint {
+      position: absolute; bottom: 32px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      opacity: 1; transition: opacity .5s ease;
+      z-index: 200;
+    }
+    #scroll-hint.hidden { opacity: 0; }
+    #scroll-hint span {
+      font-size: .72rem; letter-spacing: .15em; text-transform: uppercase;
+      color: var(--dim);
+    }
+    .scroll-arrow {
+      width: 20px; height: 20px;
+      border-right: 2px solid var(--cyan);
+      border-bottom: 2px solid var(--cyan);
+      transform: rotate(45deg);
+      animation: bounce 1.8s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%,100% { transform: rotate(45deg) translateY(0); opacity: .6; }
+      50% { transform: rotate(45deg) translateY(6px); opacity: 1; }
+    }
+
+    /* ── Features section ────────────────────────────────────── */
+    #features {
+      background: var(--bg);
+      padding: 100px 36px;
+      position: relative;
+    }
+    #features::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+
+    .section-label {
+      font-size: .72rem; letter-spacing: .25em; text-transform: uppercase;
+      color: var(--cyan); font-weight: 600; margin-bottom: 16px;
+      text-align: center;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700; text-align: center; margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--white) 40%, var(--cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .section-sub {
+      text-align: center; color: var(--dim);
+      font-size: .92rem; max-width: 520px; margin: 0 auto 64px;
+      line-height: 1.6;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px; max-width: 1100px; margin: 0 auto;
+    }
+    .feature-card {
+      padding: 28px 24px; border-radius: 14px;
+      background: rgba(255,255,255,.025);
+      border: 1px solid rgba(255,255,255,.06);
+      transition: border-color .25s, background .25s, transform .25s;
+    }
+    .feature-card:hover {
+      border-color: var(--border);
+      background: rgba(0,229,255,.04);
+      transform: translateY(-3px);
+    }
+    .feature-icon {
+      font-size: 1.6rem; margin-bottom: 16px;
+    }
+    .feature-card h4 {
+      font-size: .98rem; font-weight: 600; margin-bottom: 8px;
+    }
+    .feature-card p {
+      font-size: .82rem; color: var(--dim); line-height: 1.55;
+    }
+
+    /* ── Pricing section ─────────────────────────────────────── */
+    #pricing {
+      padding: 80px 36px 120px;
+      background: linear-gradient(to bottom, var(--bg), #060a18);
+    }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px; max-width: 800px; margin: 0 auto;
+    }
+    .pricing-card {
+      padding: 36px 32px; border-radius: 18px;
+      background: rgba(255,255,255,.025);
+      border: 1px solid rgba(255,255,255,.06);
+      display: flex; flex-direction: column;
+    }
+    .pricing-card.pro {
+      background: rgba(0,229,255,.05);
+      border: 1px solid rgba(0,229,255,.3);
+      box-shadow: 0 0 40px rgba(0,229,255,.1), inset 0 1px 0 rgba(0,229,255,.2);
+      position: relative; overflow: hidden;
+    }
+    .pricing-card.pro::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), var(--gold), transparent);
+    }
+    .plan-badge {
+      display: inline-block; margin-bottom: 20px;
+      padding: 4px 12px; border-radius: 99px;
+      font-size: .7rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+      background: rgba(0,229,255,.12); color: var(--cyan); border: 1px solid rgba(0,229,255,.3);
+    }
+    .plan-badge.free { background: rgba(255,255,255,.06); color: var(--dim); border-color: rgba(255,255,255,.1); }
+    .plan-price {
+      font-size: 3rem; font-weight: 700; line-height: 1; margin-bottom: 4px;
+      color: var(--white);
+    }
+    .plan-price sup { font-size: 1.2rem; vertical-align: top; margin-top: 8px; }
+    .plan-period {
+      font-size: .8rem; color: var(--dim); margin-bottom: 28px;
+    }
+    .plan-features {
+      list-style: none; flex: 1; margin-bottom: 32px;
+      display: flex; flex-direction: column; gap: 11px;
+    }
+    .plan-features li {
+      font-size: .85rem; color: var(--dim); display: flex; gap: 10px;
+    }
+    .plan-features li::before { content: '✓'; color: var(--cyan); flex-shrink: 0; }
+    .plan-features li.locked::before { content: '—'; color: rgba(255,255,255,.2); }
+    .plan-features li.locked { color: rgba(255,255,255,.2); }
+    .plan-btn {
+      display: block; width: 100%; padding: 14px;
+      border-radius: 9px; text-align: center;
+      font-family: inherit; font-size: .88rem; font-weight: 700;
+      letter-spacing: .06em; cursor: pointer; text-decoration: none;
+      transition: all .25s ease;
+    }
+    .plan-btn.free-btn {
+      background: transparent; border: 1px solid rgba(255,255,255,.15);
+      color: var(--dim);
+    }
+    .plan-btn.free-btn:hover { border-color: rgba(255,255,255,.3); color: var(--white); }
+    .plan-btn.pro-btn {
+      background: linear-gradient(135deg, var(--cyan2), var(--cyan));
+      border: none; color: #04060f;
+      box-shadow: 0 4px 24px rgba(0,229,255,.35);
+    }
+    .plan-btn.pro-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,229,255,.5);
+    }
+
+    /* ── Footer ──────────────────────────────────────────────── */
+    footer {
+      padding: 32px 36px;
+      border-top: 1px solid rgba(255,255,255,.05);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+    }
+    footer p { font-size: .78rem; color: rgba(255,255,255,.25); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: .78rem; color: rgba(255,255,255,.35);
+      text-decoration: none; transition: color .2s;
+    }
+    .footer-links a:hover { color: var(--cyan); }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 700px) {
+      nav { padding: 16px 20px; }
+      #phase-1, #phase-2, #phase-3 { max-width: 220px; padding: 14px 16px; }
+      #phase-1 { left: 4%; bottom: 22%; }
+      #phase-2 { right: 4%; top: 22%; }
+      #phase-3 { right: 4%; bottom: 22%; }
+      #phase-4 { width: calc(100% - 32px); }
+      footer { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ── Loading overlay ───────────────────────────────────────────── -->
+<div id="loading">
+  <div class="load-logo">Iron<em>Memory</em></div>
+  <div class="load-bar-wrap">
+    <div class="load-bar" id="load-bar"></div>
+  </div>
+  <div class="load-pct" id="load-pct">Initializing neural link… 0%</div>
+</div>
+
+<!-- ── Scroll progress ───────────────────────────────────────────── -->
+<div id="prog-bar"></div>
+
+<!-- ── Nav ───────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-logo">Iron<em>Memory</em></div>
+  <a class="nav-cta" href="#pricing">Get Pro — $1.99/mo</a>
+</nav>
+
+<!-- ── Scroll animation section ──────────────────────────────────── -->
+<div id="scroll-container">
+  <div id="sticky-wrap">
+
+    <canvas id="frame-canvas"></canvas>
+
+    <!-- Phase 1: Neural Connection -->
+    <div class="phase-card" id="phase-1">
+      <div class="tag">01 — Neural Link</div>
+      <h3>Your AI Agent<br>Gets a Brain</h3>
+      <p>OpenClaw connects to a persistent memory layer — every conversation, every fact, saved forever.</p>
+      <div class="metric">
+        <strong>100</strong><span>memories free</span>
+      </div>
+    </div>
+
+    <!-- Phase 2: Transfer -->
+    <div class="phase-card" id="phase-2">
+      <div class="tag">02 — Memory Transfer</div>
+      <h3>Knowledge Flows<br>Both Ways</h3>
+      <p>IronMemory captures structured facts, contacts, API keys, and tasks — classified automatically by AI.</p>
+      <div class="metric">
+        <strong>9</strong><span>auto-classified categories</span>
+      </div>
+    </div>
+
+    <!-- Phase 3: Awakening -->
+    <div class="phase-card" id="phase-3">
+      <div class="tag">03 — Super Brain</div>
+      <h3>Semantic Search<br>Across Sessions</h3>
+      <p>ChromaDB + mem0 vector embeddings. Find any memory in milliseconds — even across weeks of context.</p>
+      <div class="metric">
+        <strong>3072</strong><span>dim embeddings</span>
+      </div>
+    </div>
+
+    <!-- Phase 4: Pro CTA -->
+    <div class="phase-card" id="phase-4">
+      <div class="tag">04 — IronMemory Pro</div>
+      <h3>Project Completed: SUCCESS 🔥</h3>
+      <p>Unlimited memories · AES-128 encrypted vault · LightRAG knowledge graph · MCP server for any AI agent.</p>
+    </div>
+
+    <!-- Scroll hint -->
+    <div id="scroll-hint">
+      <span>Scroll to explore</span>
+      <div class="scroll-arrow"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Features section ───────────────────────────────────────────── -->
+<section id="features">
+  <p class="section-label">Why IronMemory</p>
+  <h2 class="section-title">Everything Your Agent<br>Needs to Remember</h2>
+  <p class="section-sub">A standalone memory layer that works with OpenClaw, Claude Code, or any MCP-compatible AI agent.</p>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🧠</div>
+      <h4>Semantic Vector Search</h4>
+      <p>Gemini embeddings + ChromaDB. Find related memories even when you don't remember the exact words.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔒</div>
+      <h4>AES-128 Encrypted Vault</h4>
+      <p>Passwords, API keys, and sensitive data stored with Fernet encryption. Zero-knowledge local storage.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h4>Offline-First Grep</h4>
+      <p>Brain/ markdown files always searchable via lightning-fast grep. No API required, works everywhere.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🤖</div>
+      <h4>Native MCP Server</h4>
+      <p>Drop-in MCP integration. ironmem mcp starts a server compatible with Claude Code, OpenClaw, and any agent.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📄</div>
+      <h4>Document Ingestion</h4>
+      <p>Ingest PDFs, DOCX, HTML into a LightRAG knowledge graph. Query complex documents semantically.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌐</div>
+      <h4>Works Anywhere</h4>
+      <p>macOS, Linux. Install with one curl command. Storage at ~/.ironmemory — portable, no cloud required.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Pricing ────────────────────────────────────────────────────── -->
+<section id="pricing">
+  <p class="section-label">Pricing</p>
+  <h2 class="section-title">Start Free,<br>Upgrade When Ready</h2>
+  <p class="section-sub">Install in 30 seconds. No account needed. Pro unlocks the full Super Brain.</p>
+
+  <div class="pricing-grid">
+    <!-- Free -->
+    <div class="pricing-card">
+      <div class="plan-badge free">Free</div>
+      <div class="plan-price"><sup></sup>$0</div>
+      <div class="plan-period">forever free</div>
+      <ul class="plan-features">
+        <li>100 memories</li>
+        <li>Grep offline search</li>
+        <li>AI auto-classification</li>
+        <li>MCP server (3 tools)</li>
+        <li class="locked">Semantic vector search</li>
+        <li class="locked">Encrypted vault</li>
+        <li class="locked">Document ingestion (KG)</li>
+        <li class="locked">Export / import backup</li>
+      </ul>
+      <a class="plan-btn free-btn" href="https://github.com/thedotmack/ironmemory">
+        Install Free →
+      </a>
+    </div>
+
+    <!-- Pro -->
+    <div class="pricing-card pro">
+      <div class="plan-badge">Pro</div>
+      <div class="plan-price"><sup>$</sup>1.99</div>
+      <div class="plan-period">per month · cancel anytime</div>
+      <ul class="plan-features">
+        <li>Unlimited memories</li>
+        <li>Grep offline search</li>
+        <li>AI auto-classification</li>
+        <li>MCP server (5 tools)</li>
+        <li>Semantic vector search</li>
+        <li>AES-128 encrypted vault</li>
+        <li>Document ingestion (KG)</li>
+        <li>Export / import backup</li>
+      </ul>
+      <a class="plan-btn pro-btn" href="https://ironmemory.dev/pro">
+        Get IronMemory Pro →
+      </a>
+    </div>
+  </div>
+
+  <!-- Install snippet -->
+  <div style="margin-top:56px; text-align:center;">
+    <p style="font-size:.78rem; color:var(--dim); margin-bottom:12px; letter-spacing:.1em; text-transform:uppercase;">One-line install</p>
+    <div style="display:inline-flex; align-items:center; gap:12px; background:rgba(255,255,255,.04); border:1px solid var(--border); border-radius:10px; padding:14px 22px;">
+      <code style="font-size:.9rem; color:var(--cyan); font-family:monospace; letter-spacing:.03em;">
+        curl -sSL https://get.ironmemory.dev | bash
+      </code>
+      <button onclick="navigator.clipboard.writeText('curl -sSL https://get.ironmemory.dev | bash'); this.textContent='✓ Copied'; setTimeout(()=>this.textContent='Copy',1600)"
+        style="background:rgba(0,229,255,.1); border:1px solid var(--border); color:var(--cyan); padding:6px 14px; border-radius:6px; cursor:pointer; font-family:inherit; font-size:.76rem; white-space:nowrap; transition:all .2s;">
+        Copy
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ─────────────────────────────────────────────────────── -->
+<footer>
+  <p>© 2026 IronMemory · An OpenClaw × Super Brain Labs project</p>
+  <div class="footer-links">
+    <a href="https://github.com/thedotmack/ironmemory">GitHub</a>
+    <a href="https://ironmemory.dev/docs">Docs</a>
+    <a href="https://ironmemory.dev/pro">Pro</a>
+  </div>
+</footer>
+
+
+<script>
+// ─── Config ────────────────────────────────────────────────────────────────
+const TOTAL   = 151;
+const BATCH   = 20;
+const FPS_SRC = 15;            // frames extracted at 15fps
+const FW      = 1280;
+const FH      = 716;
+
+// ─── State ─────────────────────────────────────────────────────────────────
+const FRAMES = new Array(TOTAL);
+let loaded      = 0;
+let currentFrame = 0;
+let drawnFrame   = -1;
+let scrollProg   = 0;
+
+// ─── Elements ──────────────────────────────────────────────────────────────
+const canvas   = document.getElementById('frame-canvas');
+const ctx      = canvas.getContext('2d');
+const loadEl   = document.getElementById('loading');
+const loadBar  = document.getElementById('load-bar');
+const loadPct  = document.getElementById('load-pct');
+const progBar  = document.getElementById('prog-bar');
+const scrollHint = document.getElementById('scroll-hint');
+
+// ─── Canvas sizing ──────────────────────────────────────────────────────────
+function resizeCanvas() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  if (FRAMES[currentFrame]) drawFrame(FRAMES[currentFrame]);
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+// ─── Draw frame (cover mode) ────────────────────────────────────────────────
+function drawFrame(img) {
+  const cw = canvas.width;
+  const ch = canvas.height;
+  const scale = Math.max(cw / FW, ch / FH);
+  const sw = FW * scale;
+  const sh = FH * scale;
+  const dx = (cw - sw) / 2;
+  const dy = (ch - sh) / 2;
+  ctx.clearRect(0, 0, cw, ch);
+  ctx.drawImage(img, dx, dy, sw, sh);
+}
+
+// ─── Frame loading ──────────────────────────────────────────────────────────
+function loadFrame(n) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const num = String(n + 1).padStart(4, '0');
+    img.src = `./frames/frame-${num}.jpg`;
+    img.onload  = () => { FRAMES[n] = img; loaded++; resolve(); };
+    img.onerror = () => { loaded++; resolve(); }; // non-fatal
+  });
+}
+
+async function preloadAll() {
+  for (let i = 0; i < TOTAL; i += BATCH) {
+    const batch = [];
+    for (let j = i; j < Math.min(i + BATCH, TOTAL); j++) {
+      batch.push(loadFrame(j));
+    }
+    await Promise.all(batch);
+
+    const pct = Math.round((loaded / TOTAL) * 100);
+    loadBar.style.width = pct + '%';
+    const msgs = ['Initializing neural link','Mapping memory regions','Charging synaptic cores','Calibrating embeddings','Synchronizing vault'];
+    const msgIdx = Math.min(Math.floor(pct / 20), msgs.length - 1);
+    loadPct.textContent = msgs[msgIdx] + '… ' + pct + '%';
+
+    // Draw first available frame for preview
+    if (i === 0 && FRAMES[0]) { drawFrame(FRAMES[0]); }
+  }
+
+  // Done — remove loading screen
+  loadBar.style.width = '100%';
+  loadPct.textContent = 'Neural link established · 100%';
+  await new Promise(r => setTimeout(r, 450));
+  loadEl.classList.add('hidden');
+  setTimeout(() => { loadEl.style.display = 'none'; }, 700);
+}
+
+// ─── Scroll logic ───────────────────────────────────────────────────────────
+function getScrollProgress() {
+  const container = document.getElementById('scroll-container');
+  const rect = container.getBoundingClientRect();
+  const p = -rect.top / (rect.height - window.innerHeight);
+  return Math.max(0, Math.min(1, p));
+}
+
+window.addEventListener('scroll', () => {
+  scrollProg = getScrollProgress();
+  currentFrame = Math.min(Math.floor(scrollProg * TOTAL), TOTAL - 1);
+
+  // Scroll progress bar
+  progBar.style.width = (scrollProg * 100) + '%';
+
+  // Hide scroll hint after first scroll
+  if (scrollProg > 0.02) scrollHint.classList.add('hidden');
+
+  // Phase cards
+  updatePhases(scrollProg);
+}, { passive: true });
+
+// ─── Phase overlay cards ────────────────────────────────────────────────────
+const phases = [
+  { el: document.getElementById('phase-1'), start: 0.04, end: 0.22 },
+  { el: document.getElementById('phase-2'), start: 0.26, end: 0.44 },
+  { el: document.getElementById('phase-3'), start: 0.48, end: 0.66 },
+  { el: document.getElementById('phase-4'), start: 0.70, end: 0.92 },
+];
+
+function updatePhases(p) {
+  for (const phase of phases) {
+    if (p >= phase.start && p <= phase.end) {
+      phase.el.classList.add('visible');
+    } else {
+      phase.el.classList.remove('visible');
+    }
+  }
+}
+
+// ─── rAF render loop ───────────────────────────────────────────────────────
+function tick() {
+  if (currentFrame !== drawnFrame && FRAMES[currentFrame]) {
+    // Subtle rotation: -4deg → +8deg over full scroll
+    const rotation = -4 + scrollProg * 12;
+    canvas.style.transform = `translate(-50%, -50%) rotate(${rotation.toFixed(2)}deg)`;
+
+    drawFrame(FRAMES[currentFrame]);
+    drawnFrame = currentFrame;
+  }
+  requestAnimationFrame(tick);
+}
+
+// ─── Boot ───────────────────────────────────────────────────────────────────
+preloadAll();
+tick();
+</script>
+
+</body>
+</html>
