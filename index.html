@@ -93,25 +93,28 @@
     /* ── Language Switcher ──────────────────────────────────── */
     .lang-switcher {
       display: flex; gap: 3px; align-items: center;
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.18);
       border-radius: 8px;
       padding: 3px;
       flex-shrink: 0;
     }
     .lang-btn {
       background: transparent; border: none;
-      color: rgba(232,240,255,.35);
-      font-family: inherit; font-size: .72rem; font-weight: 600;
-      letter-spacing: .04em; cursor: pointer;
-      padding: 5px 9px; border-radius: 5px;
+      color: rgba(232,240,255,.65);
+      font-family: inherit; font-size: .72rem; font-weight: 700;
+      letter-spacing: .05em; cursor: pointer;
+      padding: 5px 10px; border-radius: 5px;
       transition: all .18s ease; white-space: nowrap;
     }
-    .lang-btn:hover { color: var(--white); background: rgba(255,255,255,.06); }
+    .lang-btn:hover {
+      color: var(--white);
+      background: rgba(255,255,255,.12);
+    }
     .lang-btn.active {
-      color: var(--cyan);
-      background: rgba(0,229,255,.1);
-      box-shadow: 0 0 10px rgba(0,229,255,.15);
+      color: #04060f;
+      background: var(--cyan);
+      box-shadow: 0 0 14px rgba(0,229,255,.45);
     }
 
     .nav-cta {
