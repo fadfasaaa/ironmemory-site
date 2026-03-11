@@ -25,7 +25,8 @@
     body {
       background: var(--bg);
       color: var(--white);
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: 'Space Grotesk', -apple-system, 'PingFang SC', 'Hiragino Sans GB',
+                   'Noto Sans CJK SC', 'Yu Gothic', 'Meiryo', sans-serif;
       overflow-x: hidden;
     }
 
@@ -78,22 +79,49 @@
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 700;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 18px 36px;
+      padding: 16px 36px;
       background: linear-gradient(to bottom, rgba(4,6,15,.9), transparent);
       backdrop-filter: blur(0px);
+      gap: 16px;
     }
     .nav-logo {
       font-size: .95rem; font-weight: 700; letter-spacing: .2em;
-      color: var(--cyan); text-transform: uppercase;
+      color: var(--cyan); text-transform: uppercase; white-space: nowrap;
     }
     .nav-logo em { color: var(--white); font-style: normal; opacity: .6; }
+
+    /* ── Language Switcher ──────────────────────────────────── */
+    .lang-switcher {
+      display: flex; gap: 3px; align-items: center;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 8px;
+      padding: 3px;
+      flex-shrink: 0;
+    }
+    .lang-btn {
+      background: transparent; border: none;
+      color: rgba(232,240,255,.35);
+      font-family: inherit; font-size: .72rem; font-weight: 600;
+      letter-spacing: .04em; cursor: pointer;
+      padding: 5px 9px; border-radius: 5px;
+      transition: all .18s ease; white-space: nowrap;
+    }
+    .lang-btn:hover { color: var(--white); background: rgba(255,255,255,.06); }
+    .lang-btn.active {
+      color: var(--cyan);
+      background: rgba(0,229,255,.1);
+      box-shadow: 0 0 10px rgba(0,229,255,.15);
+    }
+
     .nav-cta {
-      padding: 8px 22px; border-radius: 6px;
+      padding: 8px 18px; border-radius: 6px;
       background: transparent; border: 1px solid var(--border);
-      color: var(--cyan); font-family: inherit; font-size: .82rem;
-      font-weight: 600; letter-spacing: .08em; cursor: pointer;
-      text-decoration: none;
+      color: var(--cyan); font-family: inherit; font-size: .8rem;
+      font-weight: 600; letter-spacing: .06em; cursor: pointer;
+      text-decoration: none; white-space: nowrap;
       transition: background .2s, border-color .2s, box-shadow .2s;
+      flex-shrink: 0;
     }
     .nav-cta:hover {
       background: rgba(0,229,255,.08);
@@ -114,7 +142,6 @@
       display: flex; align-items: center; justify-content: center;
     }
 
-    /* deep space bg radial */
     #sticky-wrap::before {
       content: '';
       position: absolute; inset: 0;
@@ -127,7 +154,6 @@
       position: absolute;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      /* mask creates floating / vignette effect */
       mask-image: radial-gradient(ellipse 72% 68% at 50% 50%,
         black 42%, transparent 78%);
       -webkit-mask-image: radial-gradient(ellipse 72% 68% at 50% 50%,
@@ -157,7 +183,7 @@
     .phase-card .tag {
       display: inline-block; margin-bottom: 10px;
       padding: 3px 10px; border-radius: 99px;
-      font-size: .68rem; font-weight: 700; letter-spacing: .14em;
+      font-size: .68rem; font-weight: 700; letter-spacing: .12em;
       text-transform: uppercase;
       background: rgba(0,229,255,.12); color: var(--cyan);
       border: 1px solid rgba(0,229,255,.3);
@@ -181,7 +207,6 @@
       font-size: .75rem; color: var(--dim);
     }
 
-    /* card positions */
     #phase-1 { bottom: 16%; left: 5%; }
     #phase-2 { top: 18%;  right: 5%; }
     #phase-3 { bottom: 16%; right: 5%; }
@@ -262,15 +287,9 @@
       background: rgba(0,229,255,.04);
       transform: translateY(-3px);
     }
-    .feature-icon {
-      font-size: 1.6rem; margin-bottom: 16px;
-    }
-    .feature-card h4 {
-      font-size: .98rem; font-weight: 600; margin-bottom: 8px;
-    }
-    .feature-card p {
-      font-size: .82rem; color: var(--dim); line-height: 1.55;
-    }
+    .feature-icon { font-size: 1.6rem; margin-bottom: 16px; }
+    .feature-card h4 { font-size: .98rem; font-weight: 600; margin-bottom: 8px; }
+    .feature-card p { font-size: .82rem; color: var(--dim); line-height: 1.55; }
 
     /* ── Pricing section ─────────────────────────────────────── */
     #pricing {
@@ -303,7 +322,7 @@
     .plan-badge {
       display: inline-block; margin-bottom: 20px;
       padding: 4px 12px; border-radius: 99px;
-      font-size: .7rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+      font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
       background: rgba(0,229,255,.12); color: var(--cyan); border: 1px solid rgba(0,229,255,.3);
     }
     .plan-badge.free { background: rgba(255,255,255,.06); color: var(--dim); border-color: rgba(255,255,255,.1); }
@@ -312,9 +331,7 @@
       color: var(--white);
     }
     .plan-price sup { font-size: 1.2rem; vertical-align: top; margin-top: 8px; }
-    .plan-period {
-      font-size: .8rem; color: var(--dim); margin-bottom: 28px;
-    }
+    .plan-period { font-size: .8rem; color: var(--dim); margin-bottom: 28px; }
     .plan-features {
       list-style: none; flex: 1; margin-bottom: 32px;
       display: flex; flex-direction: column; gap: 11px;
@@ -329,7 +346,7 @@
       display: block; width: 100%; padding: 14px;
       border-radius: 9px; text-align: center;
       font-family: inherit; font-size: .88rem; font-weight: 700;
-      letter-spacing: .06em; cursor: pointer; text-decoration: none;
+      letter-spacing: .04em; cursor: pointer; text-decoration: none;
       transition: all .25s ease;
     }
     .plan-btn.free-btn {
@@ -347,6 +364,32 @@
       box-shadow: 0 8px 32px rgba(0,229,255,.5);
     }
 
+    /* ── Install snippet ─────────────────────────────────────── */
+    .install-wrap {
+      margin-top: 56px; text-align: center;
+    }
+    .install-label {
+      font-size: .78rem; color: var(--dim); margin-bottom: 12px;
+      letter-spacing: .1em; text-transform: uppercase;
+    }
+    .install-box {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 14px 22px;
+    }
+    .install-box code {
+      font-size: .9rem; color: var(--cyan);
+      font-family: monospace; letter-spacing: .03em;
+    }
+    .copy-btn {
+      background: rgba(0,229,255,.1); border: 1px solid var(--border);
+      color: var(--cyan); padding: 6px 14px; border-radius: 6px;
+      cursor: pointer; font-family: inherit; font-size: .76rem;
+      white-space: nowrap; transition: all .2s;
+    }
+    .copy-btn:hover { background: rgba(0,229,255,.18); }
+
     /* ── Footer ──────────────────────────────────────────────── */
     footer {
       padding: 32px 36px;
@@ -363,14 +406,23 @@
     .footer-links a:hover { color: var(--cyan); }
 
     /* ── Responsive ──────────────────────────────────────────── */
-    @media (max-width: 700px) {
-      nav { padding: 16px 20px; }
-      #phase-1, #phase-2, #phase-3 { max-width: 220px; padding: 14px 16px; }
-      #phase-1 { left: 4%; bottom: 22%; }
-      #phase-2 { right: 4%; top: 22%; }
-      #phase-3 { right: 4%; bottom: 22%; }
+    @media (max-width: 768px) {
+      nav { padding: 12px 16px; gap: 8px; }
+      .nav-logo { font-size: .85rem; }
+      .lang-btn { padding: 4px 6px; font-size: .65rem; }
+      .nav-cta { padding: 6px 12px; font-size: .75rem; }
+      #phase-1, #phase-2, #phase-3 { max-width: 200px; padding: 12px 14px; }
+      #phase-1 { left: 3%; bottom: 22%; }
+      #phase-2 { right: 3%; top: 22%; }
+      #phase-3 { right: 3%; bottom: 22%; }
       #phase-4 { width: calc(100% - 32px); }
       footer { flex-direction: column; align-items: flex-start; }
+      .phase-card h3 { font-size: .95rem; }
+      .phase-card p { font-size: .75rem; }
+    }
+    @media (max-width: 480px) {
+      .lang-switcher { gap: 1px; }
+      .lang-btn { padding: 4px 5px; }
     }
   </style>
 </head>
@@ -379,7 +431,7 @@
 
 <!-- ── Loading overlay ───────────────────────────────────────────── -->
 <div id="loading">
-  <div class="load-logo">Iron<em>Memory</em></div>
+  <div class="load-logo">Iron<span>Memory</span></div>
   <div class="load-bar-wrap">
     <div class="load-bar" id="load-bar"></div>
   </div>
@@ -392,7 +444,16 @@
 <!-- ── Nav ───────────────────────────────────────────────────────── -->
 <nav>
   <div class="nav-logo">Iron<em>Memory</em></div>
-  <a class="nav-cta" href="#pricing">Get Pro — $1.99/mo</a>
+
+  <div class="lang-switcher" role="group" aria-label="Language">
+    <button class="lang-btn active" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+    <button class="lang-btn" data-lang="fr">FR</button>
+    <button class="lang-btn" data-lang="es">ES</button>
+  </div>
+
+  <a class="nav-cta" data-i18n="nav-cta" href="#pricing">Get Pro — $1.99/mo</a>
 </nav>
 
 <!-- ── Scroll animation section ──────────────────────────────────── -->
@@ -401,46 +462,49 @@
 
     <canvas id="frame-canvas"></canvas>
 
-    <!-- Phase 1: Neural Connection -->
+    <!-- Phase 1 -->
     <div class="phase-card" id="phase-1">
-      <div class="tag">01 — Neural Link</div>
-      <h3>Your AI Agent<br>Gets a Brain</h3>
-      <p>OpenClaw connects to a persistent memory layer — every conversation, every fact, saved forever.</p>
+      <div class="tag" data-i18n="phase-1-tag">01 — Neural Link</div>
+      <h3 data-i18n="phase-1-h3">Your AI Agent<br>Gets a Brain</h3>
+      <p data-i18n="phase-1-p">OpenClaw connects to a persistent memory layer — every conversation, every fact, saved forever.</p>
       <div class="metric">
-        <strong>100</strong><span>memories free</span>
+        <strong>100</strong>
+        <span data-i18n="phase-1-unit">memories free</span>
       </div>
     </div>
 
-    <!-- Phase 2: Transfer -->
+    <!-- Phase 2 -->
     <div class="phase-card" id="phase-2">
-      <div class="tag">02 — Memory Transfer</div>
-      <h3>Knowledge Flows<br>Both Ways</h3>
-      <p>IronMemory captures structured facts, contacts, API keys, and tasks — classified automatically by AI.</p>
+      <div class="tag" data-i18n="phase-2-tag">02 — Memory Transfer</div>
+      <h3 data-i18n="phase-2-h3">Knowledge Flows<br>Both Ways</h3>
+      <p data-i18n="phase-2-p">IronMemory captures structured facts, contacts, API keys, and tasks — classified automatically by AI.</p>
       <div class="metric">
-        <strong>9</strong><span>auto-classified categories</span>
+        <strong>9</strong>
+        <span data-i18n="phase-2-unit">auto-classified categories</span>
       </div>
     </div>
 
-    <!-- Phase 3: Awakening -->
+    <!-- Phase 3 -->
     <div class="phase-card" id="phase-3">
-      <div class="tag">03 — Super Brain</div>
-      <h3>Semantic Search<br>Across Sessions</h3>
-      <p>ChromaDB + mem0 vector embeddings. Find any memory in milliseconds — even across weeks of context.</p>
+      <div class="tag" data-i18n="phase-3-tag">03 — Super Brain</div>
+      <h3 data-i18n="phase-3-h3">Semantic Search<br>Across Sessions</h3>
+      <p data-i18n="phase-3-p">ChromaDB + mem0 vector embeddings. Find any memory in milliseconds — even across weeks of context.</p>
       <div class="metric">
-        <strong>3072</strong><span>dim embeddings</span>
+        <strong>3072</strong>
+        <span data-i18n="phase-3-unit">dim embeddings</span>
       </div>
     </div>
 
-    <!-- Phase 4: Pro CTA -->
+    <!-- Phase 4 -->
     <div class="phase-card" id="phase-4">
-      <div class="tag">04 — IronMemory Pro</div>
-      <h3>Project Completed: SUCCESS 🔥</h3>
-      <p>Unlimited memories · AES-128 encrypted vault · LightRAG knowledge graph · MCP server for any AI agent.</p>
+      <div class="tag" data-i18n="phase-4-tag">04 — IronMemory Pro</div>
+      <h3 data-i18n="phase-4-h3">Project Completed: SUCCESS 🔥</h3>
+      <p data-i18n="phase-4-p">Unlimited memories · AES-128 encrypted vault · LightRAG knowledge graph · MCP server for any AI agent.</p>
     </div>
 
     <!-- Scroll hint -->
     <div id="scroll-hint">
-      <span>Scroll to explore</span>
+      <span data-i18n="scroll-hint">Scroll to explore</span>
       <div class="scroll-arrow"></div>
     </div>
 
@@ -449,101 +513,99 @@
 
 <!-- ── Features section ───────────────────────────────────────────── -->
 <section id="features">
-  <p class="section-label">Why IronMemory</p>
-  <h2 class="section-title">Everything Your Agent<br>Needs to Remember</h2>
-  <p class="section-sub">A standalone memory layer that works with OpenClaw, Claude Code, or any MCP-compatible AI agent.</p>
+  <p class="section-label" data-i18n="feat-label">Why IronMemory</p>
+  <h2 class="section-title" data-i18n="feat-title">Everything Your Agent<br>Needs to Remember</h2>
+  <p class="section-sub" data-i18n="feat-sub">A standalone memory layer that works with OpenClaw, Claude Code, or any MCP-compatible AI agent.</p>
 
   <div class="features-grid">
     <div class="feature-card">
       <div class="feature-icon">🧠</div>
-      <h4>Semantic Vector Search</h4>
-      <p>Gemini embeddings + ChromaDB. Find related memories even when you don't remember the exact words.</p>
+      <h4 data-i18n="feat-1-h">Semantic Vector Search</h4>
+      <p data-i18n="feat-1-p">Gemini embeddings + ChromaDB. Find related memories even when you don't remember the exact words.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🔒</div>
-      <h4>AES-128 Encrypted Vault</h4>
-      <p>Passwords, API keys, and sensitive data stored with Fernet encryption. Zero-knowledge local storage.</p>
+      <h4 data-i18n="feat-2-h">AES-128 Encrypted Vault</h4>
+      <p data-i18n="feat-2-p">Passwords, API keys, and sensitive data stored with Fernet encryption. Zero-knowledge local storage.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">⚡</div>
-      <h4>Offline-First Grep</h4>
-      <p>Brain/ markdown files always searchable via lightning-fast grep. No API required, works everywhere.</p>
+      <h4 data-i18n="feat-3-h">Offline-First Grep</h4>
+      <p data-i18n="feat-3-p">Brain/ markdown files always searchable via lightning-fast grep. No API required, works everywhere.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🤖</div>
-      <h4>Native MCP Server</h4>
-      <p>Drop-in MCP integration. ironmem mcp starts a server compatible with Claude Code, OpenClaw, and any agent.</p>
+      <h4 data-i18n="feat-4-h">Native MCP Server</h4>
+      <p data-i18n="feat-4-p">Drop-in MCP integration. ironmem mcp starts a server compatible with Claude Code, OpenClaw, and any agent.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">📄</div>
-      <h4>Document Ingestion</h4>
-      <p>Ingest PDFs, DOCX, HTML into a LightRAG knowledge graph. Query complex documents semantically.</p>
+      <h4 data-i18n="feat-5-h">Document Ingestion</h4>
+      <p data-i18n="feat-5-p">Ingest PDFs, DOCX, HTML into a LightRAG knowledge graph. Query complex documents semantically.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🌐</div>
-      <h4>Works Anywhere</h4>
-      <p>macOS, Linux. Install with one curl command. Storage at ~/.ironmemory — portable, no cloud required.</p>
+      <h4 data-i18n="feat-6-h">Works Anywhere</h4>
+      <p data-i18n="feat-6-p">macOS, Linux. Install with one curl command. Storage at ~/.ironmemory — portable, no cloud required.</p>
     </div>
   </div>
 </section>
 
 <!-- ── Pricing ────────────────────────────────────────────────────── -->
 <section id="pricing">
-  <p class="section-label">Pricing</p>
-  <h2 class="section-title">Start Free,<br>Upgrade When Ready</h2>
-  <p class="section-sub">Install in 30 seconds. No account needed. Pro unlocks the full Super Brain.</p>
+  <p class="section-label" data-i18n="price-label">Pricing</p>
+  <h2 class="section-title" data-i18n="price-title">Start Free,<br>Upgrade When Ready</h2>
+  <p class="section-sub" data-i18n="price-sub">Install in 30 seconds. No account needed. Pro unlocks the full Super Brain.</p>
 
   <div class="pricing-grid">
     <!-- Free -->
     <div class="pricing-card">
-      <div class="plan-badge free">Free</div>
+      <div class="plan-badge free" data-i18n="free-badge">Free</div>
       <div class="plan-price"><sup></sup>$0</div>
-      <div class="plan-period">forever free</div>
+      <div class="plan-period" data-i18n="free-period">forever free</div>
       <ul class="plan-features">
-        <li>100 memories</li>
-        <li>Grep offline search</li>
-        <li>AI auto-classification</li>
-        <li>MCP server (3 tools)</li>
-        <li class="locked">Semantic vector search</li>
-        <li class="locked">Encrypted vault</li>
-        <li class="locked">Document ingestion (KG)</li>
-        <li class="locked">Export / import backup</li>
+        <li data-i18n="free-f1">100 memories</li>
+        <li data-i18n="free-f2">Grep offline search</li>
+        <li data-i18n="free-f3">AI auto-classification</li>
+        <li data-i18n="free-f4">MCP server (3 tools)</li>
+        <li class="locked" data-i18n="free-f5">Semantic vector search</li>
+        <li class="locked" data-i18n="free-f6">Encrypted vault</li>
+        <li class="locked" data-i18n="free-f7">Document ingestion (KG)</li>
+        <li class="locked" data-i18n="free-f8">Export / import backup</li>
       </ul>
-      <a class="plan-btn free-btn" href="https://github.com/thedotmack/ironmemory">
+      <a class="plan-btn free-btn" data-i18n="free-btn" href="https://github.com/thedotmack/ironmemory">
         Install Free →
       </a>
     </div>
 
     <!-- Pro -->
     <div class="pricing-card pro">
-      <div class="plan-badge">Pro</div>
+      <div class="plan-badge" data-i18n="pro-badge">Pro</div>
       <div class="plan-price"><sup>$</sup>1.99</div>
-      <div class="plan-period">per month · cancel anytime</div>
+      <div class="plan-period" data-i18n="pro-period">per month · cancel anytime</div>
       <ul class="plan-features">
-        <li>Unlimited memories</li>
-        <li>Grep offline search</li>
-        <li>AI auto-classification</li>
-        <li>MCP server (5 tools)</li>
-        <li>Semantic vector search</li>
-        <li>AES-128 encrypted vault</li>
-        <li>Document ingestion (KG)</li>
-        <li>Export / import backup</li>
+        <li data-i18n="pro-f1">Unlimited memories</li>
+        <li data-i18n="pro-f2">Grep offline search</li>
+        <li data-i18n="pro-f3">AI auto-classification</li>
+        <li data-i18n="pro-f4">MCP server (5 tools)</li>
+        <li data-i18n="pro-f5">Semantic vector search</li>
+        <li data-i18n="pro-f6">AES-128 encrypted vault</li>
+        <li data-i18n="pro-f7">Document ingestion (KG)</li>
+        <li data-i18n="pro-f8">Export / import backup</li>
       </ul>
-      <a class="plan-btn pro-btn" href="https://ironmemory.dev/pro">
+      <a class="plan-btn pro-btn" data-i18n="pro-btn" href="https://ironmemory.dev/pro">
         Get IronMemory Pro →
       </a>
     </div>
   </div>
 
-  <!-- Install snippet -->
-  <div style="margin-top:56px; text-align:center;">
-    <p style="font-size:.78rem; color:var(--dim); margin-bottom:12px; letter-spacing:.1em; text-transform:uppercase;">One-line install</p>
-    <div style="display:inline-flex; align-items:center; gap:12px; background:rgba(255,255,255,.04); border:1px solid var(--border); border-radius:10px; padding:14px 22px;">
-      <code style="font-size:.9rem; color:var(--cyan); font-family:monospace; letter-spacing:.03em;">
-        curl -sSL https://get.ironmemory.dev | bash
-      </code>
-      <button onclick="navigator.clipboard.writeText('curl -sSL https://get.ironmemory.dev | bash'); this.textContent='✓ Copied'; setTimeout(()=>this.textContent='Copy',1600)"
-        style="background:rgba(0,229,255,.1); border:1px solid var(--border); color:var(--cyan); padding:6px 14px; border-radius:6px; cursor:pointer; font-family:inherit; font-size:.76rem; white-space:nowrap; transition:all .2s;">
+  <div class="install-wrap">
+    <p class="install-label" data-i18n="install-label">One-line install</p>
+    <div class="install-box">
+      <code>curl -sSL https://get.ironmemory.dev | bash</code>
+      <button class="copy-btn" id="copy-btn"
+        data-copy="Copy" data-copied="✓ Copied"
+        onclick="navigator.clipboard.writeText('curl -sSL https://get.ironmemory.dev | bash'); this.textContent = i18n[currentLang]['copy-done'] || '✓ Copied'; setTimeout(() => this.textContent = i18n[currentLang]['copy-btn'] || 'Copy', 1600)">
         Copy
       </button>
     </div>
@@ -552,31 +614,450 @@
 
 <!-- ── Footer ─────────────────────────────────────────────────────── -->
 <footer>
-  <p>© 2026 IronMemory · An OpenClaw × Super Brain Labs project</p>
+  <p data-i18n="footer-copy">© 2026 IronMemory · An OpenClaw × Super Brain Labs project</p>
   <div class="footer-links">
-    <a href="https://github.com/thedotmack/ironmemory">GitHub</a>
-    <a href="https://ironmemory.dev/docs">Docs</a>
-    <a href="https://ironmemory.dev/pro">Pro</a>
+    <a data-i18n="footer-github" href="https://github.com/thedotmack/ironmemory">GitHub</a>
+    <a data-i18n="footer-docs" href="https://ironmemory.dev/docs">Docs</a>
+    <a data-i18n="footer-pro" href="https://ironmemory.dev/pro">Pro</a>
   </div>
 </footer>
 
 
 <script>
-// ─── Config ────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════
+// i18n — Translations (EN · 中文 · 日本語 · FR · ES)
+// ═══════════════════════════════════════════════════════════════════
+const i18n = {
+  en: {
+    'page-title':    'IronMemory — OpenClaw × Super Brain',
+    'nav-cta':       'Get Pro — $1.99/mo',
+    'load-done':     'Neural link established · 100%',
+    'load-0':        'Initializing neural link',
+    'load-1':        'Mapping memory regions',
+    'load-2':        'Charging synaptic cores',
+    'load-3':        'Calibrating embeddings',
+    'load-4':        'Synchronizing vault',
+    'scroll-hint':   'Scroll to explore',
+    'phase-1-tag':   '01 — Neural Link',
+    'phase-1-h3':    'Your AI Agent<br>Gets a Brain',
+    'phase-1-p':     'OpenClaw connects to a persistent memory layer — every conversation, every fact, saved forever.',
+    'phase-1-unit':  'memories free',
+    'phase-2-tag':   '02 — Memory Transfer',
+    'phase-2-h3':    'Knowledge Flows<br>Both Ways',
+    'phase-2-p':     'IronMemory captures structured facts, contacts, API keys, and tasks — classified automatically by AI.',
+    'phase-2-unit':  'auto-classified categories',
+    'phase-3-tag':   '03 — Super Brain',
+    'phase-3-h3':    'Semantic Search<br>Across Sessions',
+    'phase-3-p':     'ChromaDB + mem0 vector embeddings. Find any memory in milliseconds — even across weeks of context.',
+    'phase-3-unit':  'dim embeddings',
+    'phase-4-tag':   '04 — IronMemory Pro',
+    'phase-4-h3':    'Project Completed: SUCCESS 🔥',
+    'phase-4-p':     'Unlimited memories · AES-128 encrypted vault · LightRAG knowledge graph · MCP server for any AI agent.',
+    'feat-label':    'Why IronMemory',
+    'feat-title':    'Everything Your Agent<br>Needs to Remember',
+    'feat-sub':      'A standalone memory layer that works with OpenClaw, Claude Code, or any MCP-compatible AI agent.',
+    'feat-1-h':      'Semantic Vector Search',
+    'feat-1-p':      'Gemini embeddings + ChromaDB. Find related memories even when you don\'t remember the exact words.',
+    'feat-2-h':      'AES-128 Encrypted Vault',
+    'feat-2-p':      'Passwords, API keys, and sensitive data stored with Fernet encryption. Zero-knowledge local storage.',
+    'feat-3-h':      'Offline-First Grep',
+    'feat-3-p':      'Brain/ markdown files always searchable via lightning-fast grep. No API required, works everywhere.',
+    'feat-4-h':      'Native MCP Server',
+    'feat-4-p':      'Drop-in MCP integration. ironmem mcp starts a server compatible with Claude Code, OpenClaw, and any agent.',
+    'feat-5-h':      'Document Ingestion',
+    'feat-5-p':      'Ingest PDFs, DOCX, HTML into a LightRAG knowledge graph. Query complex documents semantically.',
+    'feat-6-h':      'Works Anywhere',
+    'feat-6-p':      'macOS, Linux. Install with one curl command. Storage at ~/.ironmemory — portable, no cloud required.',
+    'price-label':   'Pricing',
+    'price-title':   'Start Free,<br>Upgrade When Ready',
+    'price-sub':     'Install in 30 seconds. No account needed. Pro unlocks the full Super Brain.',
+    'free-badge':    'Free',
+    'free-period':   'forever free',
+    'free-f1':       '100 memories',
+    'free-f2':       'Grep offline search',
+    'free-f3':       'AI auto-classification',
+    'free-f4':       'MCP server (3 tools)',
+    'free-f5':       'Semantic vector search',
+    'free-f6':       'Encrypted vault',
+    'free-f7':       'Document ingestion (KG)',
+    'free-f8':       'Export / import backup',
+    'free-btn':      'Install Free →',
+    'pro-badge':     'Pro',
+    'pro-period':    'per month · cancel anytime',
+    'pro-f1':        'Unlimited memories',
+    'pro-f2':        'Grep offline search',
+    'pro-f3':        'AI auto-classification',
+    'pro-f4':        'MCP server (5 tools)',
+    'pro-f5':        'Semantic vector search',
+    'pro-f6':        'AES-128 encrypted vault',
+    'pro-f7':        'Document ingestion (KG)',
+    'pro-f8':        'Export / import backup',
+    'pro-btn':       'Get IronMemory Pro →',
+    'install-label': 'One-line install',
+    'copy-btn':      'Copy',
+    'copy-done':     '✓ Copied',
+    'footer-copy':   '© 2026 IronMemory · An OpenClaw × Super Brain Labs project',
+    'footer-github': 'GitHub',
+    'footer-docs':   'Docs',
+    'footer-pro':    'Pro',
+  },
+
+  zh: {
+    'page-title':    'IronMemory — OpenClaw × 超级大脑',
+    'nav-cta':       'Pro 版 — $1.99/月',
+    'load-done':     '神经连接已建立 · 100%',
+    'load-0':        '初始化神经连接',
+    'load-1':        '绘制记忆区域',
+    'load-2':        '充能突触核心',
+    'load-3':        '校准嵌入向量',
+    'load-4':        '同步加密保险库',
+    'scroll-hint':   '滚动探索',
+    'phase-1-tag':   '01 — 神经连接',
+    'phase-1-h3':    '你的 AI 助手<br>拥有了大脑',
+    'phase-1-p':     'OpenClaw 连接到持久记忆层——每次对话、每个事实，永久保存。',
+    'phase-1-unit':  '条免费记忆',
+    'phase-2-tag':   '02 — 记忆传输',
+    'phase-2-h3':    '知识双向流动',
+    'phase-2-p':     'IronMemory 自动捕获结构化事实、联系人、API 密钥和任务——由 AI 自动分类。',
+    'phase-2-unit':  '个自动分类类别',
+    'phase-3-tag':   '03 — 超级大脑',
+    'phase-3-h3':    '跨会话<br>语义搜索',
+    'phase-3-p':     'ChromaDB + mem0 向量嵌入。毫秒内查找任何记忆——甚至跨越数周上下文。',
+    'phase-3-unit':  '维嵌入向量',
+    'phase-4-tag':   '04 — IronMemory Pro',
+    'phase-4-h3':    '项目完成：成功 🔥',
+    'phase-4-p':     '无限记忆 · AES-128 加密保险库 · LightRAG 知识图谱 · 任何 AI 代理的 MCP 服务器。',
+    'feat-label':    '为什么选择 IronMemory',
+    'feat-title':    '你的 AI 代理<br>所需的一切记忆',
+    'feat-sub':      '独立记忆层，兼容 OpenClaw、Claude Code 或任何支持 MCP 的 AI 代理。',
+    'feat-1-h':      '语义向量搜索',
+    'feat-1-p':      'Gemini 嵌入 + ChromaDB。即使你不记得确切词语，也能找到相关记忆。',
+    'feat-2-h':      'AES-128 加密保险库',
+    'feat-2-p':      '密码、API 密钥和敏感数据通过 Fernet 加密存储。零知识本地存储。',
+    'feat-3-h':      '离线优先 Grep',
+    'feat-3-p':      'Brain/ 目录的 Markdown 文件始终可通过超快 grep 搜索。无需 API，随处可用。',
+    'feat-4-h':      '原生 MCP 服务器',
+    'feat-4-p':      '即插即用的 MCP 集成。ironmem mcp 启动兼容 Claude Code、OpenClaw 和任何代理的服务器。',
+    'feat-5-h':      '文档摄入',
+    'feat-5-p':      '将 PDF、DOCX、HTML 摄入 LightRAG 知识图谱。语义查询复杂文档。',
+    'feat-6-h':      '随处可用',
+    'feat-6-p':      'macOS、Linux。一条命令安装。存储在 ~/.ironmemory——便携，无需云端。',
+    'price-label':   '定价',
+    'price-title':   '免费开始，<br>随时升级',
+    'price-sub':     '30 秒安装。无需账号。Pro 版解锁完整超级大脑。',
+    'free-badge':    '免费版',
+    'free-period':   '永久免费',
+    'free-f1':       '100 条记忆',
+    'free-f2':       '离线 Grep 搜索',
+    'free-f3':       'AI 自动分类',
+    'free-f4':       'MCP 服务器（3 个工具）',
+    'free-f5':       '语义向量搜索',
+    'free-f6':       '加密保险库',
+    'free-f7':       '文档摄入（KG）',
+    'free-f8':       '导出 / 导入备份',
+    'free-btn':      '免费安装 →',
+    'pro-badge':     '专业版',
+    'pro-period':    '每月 · 随时取消',
+    'pro-f1':        '无限记忆',
+    'pro-f2':        '离线 Grep 搜索',
+    'pro-f3':        'AI 自动分类',
+    'pro-f4':        'MCP 服务器（5 个工具）',
+    'pro-f5':        '语义向量搜索',
+    'pro-f6':        'AES-128 加密保险库',
+    'pro-f7':        '文档摄入（KG）',
+    'pro-f8':        '导出 / 导入备份',
+    'pro-btn':       '获取 IronMemory Pro →',
+    'install-label': '一键安装',
+    'copy-btn':      '复制',
+    'copy-done':     '✓ 已复制',
+    'footer-copy':   '© 2026 IronMemory · OpenClaw × Super Brain Labs 项目',
+    'footer-github': 'GitHub',
+    'footer-docs':   '文档',
+    'footer-pro':    'Pro 版',
+  },
+
+  ja: {
+    'page-title':    'IronMemory — OpenClaw × スーパーブレイン',
+    'nav-cta':       'Pro 版 — $1.99/月',
+    'load-done':     'ニューラルリンク確立 · 100%',
+    'load-0':        'ニューラルリンクを初期化中',
+    'load-1':        'メモリ領域をマッピング中',
+    'load-2':        'シナプスコアを充電中',
+    'load-3':        'エンベディングを調整中',
+    'load-4':        'ボルトを同期中',
+    'scroll-hint':   'スクロールして探索',
+    'phase-1-tag':   '01 — ニューラルリンク',
+    'phase-1-h3':    'AIエージェントが<br>脳を持った',
+    'phase-1-p':     'OpenClawは永続メモリ層に接続——会話も事実も、すべて永遠に保存。',
+    'phase-1-unit':  '件のメモリ無料',
+    'phase-2-tag':   '02 — メモリ転送',
+    'phase-2-h3':    '知識が双方向に<br>流れる',
+    'phase-2-p':     'IronMemoryは構造化された事実、連絡先、APIキー、タスクを自動でAI分類して取得。',
+    'phase-2-unit':  'つの自動分類カテゴリ',
+    'phase-3-tag':   '03 — スーパーブレイン',
+    'phase-3-h3':    'セッションをまたいだ<br>セマンティック検索',
+    'phase-3-p':     'ChromaDB + mem0ベクターエンベディング。数週間前のコンテキストでも、どんなメモリも数ミリ秒で検索。',
+    'phase-3-unit':  '次元エンベディング',
+    'phase-4-tag':   '04 — IronMemory Pro',
+    'phase-4-h3':    'プロジェクト完了：成功 🔥',
+    'phase-4-p':     '無制限メモリ · AES-128暗号化ボルト · LightRAGナレッジグラフ · あらゆるAIエージェント向けMCPサーバー',
+    'feat-label':    'IronMemoryを選ぶ理由',
+    'feat-title':    'エージェントの記憶に<br>必要なすべて',
+    'feat-sub':      'OpenClaw、Claude Code、またはMCP対応のAIエージェントと連携するスタンドアロンメモリ層。',
+    'feat-1-h':      'セマンティックベクター検索',
+    'feat-1-p':      'Geminiエンベディング + ChromaDB。正確な単語を覚えていなくても関連メモリを発見。',
+    'feat-2-h':      'AES-128暗号化ボルト',
+    'feat-2-p':      'パスワード、APIキー、機密データをFernet暗号化で保存。ゼロナレッジのローカルストレージ。',
+    'feat-3-h':      'オフライン優先Grep',
+    'feat-3-p':      'Brain/マークダウンファイルを超高速grepで常に検索可能。API不要、どこでも動作。',
+    'feat-4-h':      'ネイティブMCPサーバー',
+    'feat-4-p':      'ドロップインMCP統合。ironmem mcpがClaude Code、OpenClaw、あらゆるエージェントに対応したサーバーを起動。',
+    'feat-5-h':      'ドキュメント取り込み',
+    'feat-5-p':      'PDF、DOCX、HTMLをLightRAGナレッジグラフに取り込み。複雑なドキュメントをセマンティックに検索。',
+    'feat-6-h':      'どこでも動作',
+    'feat-6-p':      'macOS、Linux。1行コマンドでインストール。~/.ironmemoryに保存——ポータブル、クラウド不要。',
+    'price-label':   '料金プラン',
+    'price-title':   '無料で始め、<br>準備ができたらアップグレード',
+    'price-sub':     '30秒でインストール。アカウント不要。ProでスーパーブレインのフルパワーをON。',
+    'free-badge':    '無料',
+    'free-period':   '永遠に無料',
+    'free-f1':       '100件のメモリ',
+    'free-f2':       'オフラインGrepサーチ',
+    'free-f3':       'AI自動分類',
+    'free-f4':       'MCPサーバー（3ツール）',
+    'free-f5':       'セマンティックベクター検索',
+    'free-f6':       '暗号化ボルト',
+    'free-f7':       'ドキュメント取り込み（KG）',
+    'free-f8':       'エクスポート / インポート',
+    'free-btn':      '無料インストール →',
+    'pro-badge':     'Pro',
+    'pro-period':    '月額 · いつでもキャンセル可',
+    'pro-f1':        '無制限メモリ',
+    'pro-f2':        'オフラインGrepサーチ',
+    'pro-f3':        'AI自動分類',
+    'pro-f4':        'MCPサーバー（5ツール）',
+    'pro-f5':        'セマンティックベクター検索',
+    'pro-f6':        'AES-128暗号化ボルト',
+    'pro-f7':        'ドキュメント取り込み（KG）',
+    'pro-f8':        'エクスポート / インポート',
+    'pro-btn':       'IronMemory Proを取得 →',
+    'install-label': 'ワンラインインストール',
+    'copy-btn':      'コピー',
+    'copy-done':     '✓ コピー済み',
+    'footer-copy':   '© 2026 IronMemory · OpenClaw × Super Brain Labs プロジェクト',
+    'footer-github': 'GitHub',
+    'footer-docs':   'ドキュメント',
+    'footer-pro':    'Pro版',
+  },
+
+  fr: {
+    'page-title':    'IronMemory — OpenClaw × Super Cerveau',
+    'nav-cta':       'Obtenir Pro — 1,99$/mois',
+    'load-done':     'Lien neural établi · 100%',
+    'load-0':        'Initialisation du lien neural',
+    'load-1':        'Cartographie des zones mémoire',
+    'load-2':        'Chargement des noyaux synaptiques',
+    'load-3':        'Calibration des embeddings',
+    'load-4':        'Synchronisation du coffre',
+    'scroll-hint':   'Défiler pour explorer',
+    'phase-1-tag':   '01 — Lien Neural',
+    'phase-1-h3':    'Votre Agent IA<br>a un Cerveau',
+    'phase-1-p':     'OpenClaw se connecte à une couche de mémoire persistante — chaque conversation, chaque fait, sauvegardé pour toujours.',
+    'phase-1-unit':  'souvenirs gratuits',
+    'phase-2-tag':   '02 — Transfert de Mémoire',
+    'phase-2-h3':    'La Connaissance<br>Circule dans les Deux Sens',
+    'phase-2-p':     'IronMemory capture des faits structurés, contacts, clés API et tâches — classifiés automatiquement par IA.',
+    'phase-2-unit':  'catégories auto-classifiées',
+    'phase-3-tag':   '03 — Super Cerveau',
+    'phase-3-h3':    'Recherche Sémantique<br>Toutes Sessions',
+    'phase-3-p':     'ChromaDB + embeddings vectoriels mem0. Trouvez n\'importe quel souvenir en millisecondes — même des semaines après.',
+    'phase-3-unit':  'dim embeddings',
+    'phase-4-tag':   '04 — IronMemory Pro',
+    'phase-4-h3':    'Projet Complété : SUCCÈS 🔥',
+    'phase-4-p':     'Mémoires illimitées · Coffre chiffré AES-128 · Graphe de connaissances LightRAG · Serveur MCP pour tout agent IA.',
+    'feat-label':    'Pourquoi IronMemory',
+    'feat-title':    'Tout ce dont votre Agent<br>a besoin pour se Souvenir',
+    'feat-sub':      'Une couche de mémoire autonome compatible avec OpenClaw, Claude Code ou tout agent IA supportant MCP.',
+    'feat-1-h':      'Recherche Vectorielle Sémantique',
+    'feat-1-p':      'Embeddings Gemini + ChromaDB. Trouvez des souvenirs liés même sans vous souvenir des mots exacts.',
+    'feat-2-h':      'Coffre Chiffré AES-128',
+    'feat-2-p':      'Mots de passe, clés API et données sensibles stockés avec chiffrement Fernet. Stockage local zéro-connaissance.',
+    'feat-3-h':      'Grep Hors-ligne en Premier',
+    'feat-3-p':      'Fichiers Markdown du cerveau toujours consultables via grep ultra-rapide. Sans API, fonctionne partout.',
+    'feat-4-h':      'Serveur MCP Natif',
+    'feat-4-p':      'Intégration MCP clé en main. ironmem mcp démarre un serveur compatible Claude Code, OpenClaw et tout agent.',
+    'feat-5-h':      'Ingestion de Documents',
+    'feat-5-p':      'Intégrez PDFs, DOCX, HTML dans un graphe de connaissances LightRAG. Interrogez les documents complexes sémantiquement.',
+    'feat-6-h':      'Fonctionne Partout',
+    'feat-6-p':      'macOS, Linux. Installation en une commande. Stockage dans ~/.ironmemory — portable, sans cloud requis.',
+    'price-label':   'Tarifs',
+    'price-title':   'Commencez Gratuitement,<br>Passez Pro Quand Vous Voulez',
+    'price-sub':     'Installation en 30 secondes. Sans compte. Pro débloque le Super Cerveau complet.',
+    'free-badge':    'Gratuit',
+    'free-period':   'gratuit pour toujours',
+    'free-f1':       '100 souvenirs',
+    'free-f2':       'Grep hors-ligne',
+    'free-f3':       'Auto-classification IA',
+    'free-f4':       'Serveur MCP (3 outils)',
+    'free-f5':       'Recherche vectorielle sémantique',
+    'free-f6':       'Coffre chiffré',
+    'free-f7':       'Ingestion de documents (KG)',
+    'free-f8':       'Export / import sauvegarde',
+    'free-btn':      'Installer Gratuitement →',
+    'pro-badge':     'Pro',
+    'pro-period':    'par mois · résiliation à tout moment',
+    'pro-f1':        'Mémoires illimitées',
+    'pro-f2':        'Grep hors-ligne',
+    'pro-f3':        'Auto-classification IA',
+    'pro-f4':        'Serveur MCP (5 outils)',
+    'pro-f5':        'Recherche vectorielle sémantique',
+    'pro-f6':        'Coffre chiffré AES-128',
+    'pro-f7':        'Ingestion de documents (KG)',
+    'pro-f8':        'Export / import sauvegarde',
+    'pro-btn':       'Obtenir IronMemory Pro →',
+    'install-label': 'Installation en une ligne',
+    'copy-btn':      'Copier',
+    'copy-done':     '✓ Copié',
+    'footer-copy':   '© 2026 IronMemory · Un projet OpenClaw × Super Brain Labs',
+    'footer-github': 'GitHub',
+    'footer-docs':   'Docs',
+    'footer-pro':    'Pro',
+  },
+
+  es: {
+    'page-title':    'IronMemory — OpenClaw × Super Cerebro',
+    'nav-cta':       'Obtener Pro — $1.99/mes',
+    'load-done':     'Enlace neural establecido · 100%',
+    'load-0':        'Inicializando enlace neural',
+    'load-1':        'Mapeando regiones de memoria',
+    'load-2':        'Cargando núcleos sinápticos',
+    'load-3':        'Calibrando embeddings',
+    'load-4':        'Sincronizando bóveda',
+    'scroll-hint':   'Desplaza para explorar',
+    'phase-1-tag':   '01 — Enlace Neural',
+    'phase-1-h3':    'Tu Agente IA<br>tiene un Cerebro',
+    'phase-1-p':     'OpenClaw se conecta a una capa de memoria persistente — cada conversación, cada hecho, guardado para siempre.',
+    'phase-1-unit':  'memorias gratis',
+    'phase-2-tag':   '02 — Transferencia de Memoria',
+    'phase-2-h3':    'El Conocimiento Fluye<br>en Ambas Direcciones',
+    'phase-2-p':     'IronMemory captura hechos estructurados, contactos, claves API y tareas — clasificados automáticamente por IA.',
+    'phase-2-unit':  'categorías auto-clasificadas',
+    'phase-3-tag':   '03 — Super Cerebro',
+    'phase-3-h3':    'Búsqueda Semántica<br>entre Sesiones',
+    'phase-3-p':     'ChromaDB + embeddings vectoriales mem0. Encuentra cualquier memoria en milisegundos — incluso semanas después.',
+    'phase-3-unit':  'dim embeddings',
+    'phase-4-tag':   '04 — IronMemory Pro',
+    'phase-4-h3':    'Proyecto Completado: ÉXITO 🔥',
+    'phase-4-p':     'Memorias ilimitadas · Bóveda cifrada AES-128 · Grafo de conocimiento LightRAG · Servidor MCP para cualquier agente IA.',
+    'feat-label':    'Por qué IronMemory',
+    'feat-title':    'Todo lo que tu Agente<br>necesita Recordar',
+    'feat-sub':      'Una capa de memoria independiente que funciona con OpenClaw, Claude Code o cualquier agente IA compatible con MCP.',
+    'feat-1-h':      'Búsqueda Vectorial Semántica',
+    'feat-1-p':      'Embeddings Gemini + ChromaDB. Encuentra memorias relacionadas incluso sin recordar las palabras exactas.',
+    'feat-2-h':      'Bóveda Cifrada AES-128',
+    'feat-2-p':      'Contraseñas, claves API y datos sensibles almacenados con cifrado Fernet. Almacenamiento local sin conocimiento.',
+    'feat-3-h':      'Grep Sin Conexión Prioritario',
+    'feat-3-p':      'Archivos Markdown del cerebro siempre buscables con grep ultrarrápido. Sin API, funciona en todos lados.',
+    'feat-4-h':      'Servidor MCP Nativo',
+    'feat-4-p':      'Integración MCP plug-and-play. ironmem mcp inicia un servidor compatible con Claude Code, OpenClaw y cualquier agente.',
+    'feat-5-h':      'Ingesta de Documentos',
+    'feat-5-p':      'Incorpora PDFs, DOCX, HTML en un grafo de conocimiento LightRAG. Consulta documentos complejos semánticamente.',
+    'feat-6-h':      'Funciona en Cualquier Lugar',
+    'feat-6-p':      'macOS, Linux. Instala con un comando. Almacenamiento en ~/.ironmemory — portátil, sin cloud requerido.',
+    'price-label':   'Precios',
+    'price-title':   'Empieza Gratis,<br>Actualiza Cuando Estés Listo',
+    'price-sub':     'Instalación en 30 segundos. Sin cuenta. Pro desbloquea el Super Cerebro completo.',
+    'free-badge':    'Gratis',
+    'free-period':   'gratis para siempre',
+    'free-f1':       '100 memorias',
+    'free-f2':       'Grep sin conexión',
+    'free-f3':       'Auto-clasificación IA',
+    'free-f4':       'Servidor MCP (3 herramientas)',
+    'free-f5':       'Búsqueda vectorial semántica',
+    'free-f6':       'Bóveda cifrada',
+    'free-f7':       'Ingesta de documentos (KG)',
+    'free-f8':       'Export / import copia de seguridad',
+    'free-btn':      'Instalar Gratis →',
+    'pro-badge':     'Pro',
+    'pro-period':    'por mes · cancela cuando quieras',
+    'pro-f1':        'Memorias ilimitadas',
+    'pro-f2':        'Grep sin conexión',
+    'pro-f3':        'Auto-clasificación IA',
+    'pro-f4':        'Servidor MCP (5 herramientas)',
+    'pro-f5':        'Búsqueda vectorial semántica',
+    'pro-f6':        'Bóveda cifrada AES-128',
+    'pro-f7':        'Ingesta de documentos (KG)',
+    'pro-f8':        'Export / import copia de seguridad',
+    'pro-btn':       'Obtener IronMemory Pro →',
+    'install-label': 'Instalación en una línea',
+    'copy-btn':      'Copiar',
+    'copy-done':     '✓ Copiado',
+    'footer-copy':   '© 2026 IronMemory · Un proyecto OpenClaw × Super Brain Labs',
+    'footer-github': 'GitHub',
+    'footer-docs':   'Docs',
+    'footer-pro':    'Pro',
+  },
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// Language switcher
+// ═══════════════════════════════════════════════════════════════════
+let currentLang = localStorage.getItem('ironmemory-lang') || 'en';
+
+function setLang(lang) {
+  if (!i18n[lang]) return;
+  currentLang = lang;
+
+  // HTML lang attribute
+  const langMap = { en: 'en', zh: 'zh-CN', ja: 'ja', fr: 'fr', es: 'es' };
+  document.documentElement.lang = langMap[lang];
+
+  // Page title
+  document.title = i18n[lang]['page-title'];
+
+  // Update all data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const text = i18n[lang][key];
+    if (text !== undefined) el.innerHTML = text;
+  });
+
+  // Update copy button text
+  const copyBtn = document.getElementById('copy-btn');
+  if (copyBtn) copyBtn.textContent = i18n[lang]['copy-btn'] || 'Copy';
+
+  // Update active lang button
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+  });
+
+  // Save preference
+  localStorage.setItem('ironmemory-lang', lang);
+}
+
+// Attach lang button listeners
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => setLang(btn.getAttribute('data-lang')));
+});
+
+// Apply saved language on load
+setLang(currentLang);
+
+
+// ═══════════════════════════════════════════════════════════════════
+// Frame animation
+// ═══════════════════════════════════════════════════════════════════
 const TOTAL   = 151;
 const BATCH   = 20;
-const FPS_SRC = 15;            // frames extracted at 15fps
 const FW      = 1280;
 const FH      = 716;
 
-// ─── State ─────────────────────────────────────────────────────────────────
 const FRAMES = new Array(TOTAL);
-let loaded      = 0;
+let loaded       = 0;
 let currentFrame = 0;
 let drawnFrame   = -1;
 let scrollProg   = 0;
 
-// ─── Elements ──────────────────────────────────────────────────────────────
 const canvas   = document.getElementById('frame-canvas');
 const ctx      = canvas.getContext('2d');
 const loadEl   = document.getElementById('loading');
@@ -585,7 +1066,6 @@ const loadPct  = document.getElementById('load-pct');
 const progBar  = document.getElementById('prog-bar');
 const scrollHint = document.getElementById('scroll-hint');
 
-// ─── Canvas sizing ──────────────────────────────────────────────────────────
 function resizeCanvas() {
   canvas.width  = window.innerWidth;
   canvas.height = window.innerHeight;
@@ -594,57 +1074,55 @@ function resizeCanvas() {
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
-// ─── Draw frame (cover mode) ────────────────────────────────────────────────
 function drawFrame(img) {
-  const cw = canvas.width;
-  const ch = canvas.height;
+  const cw = canvas.width, ch = canvas.height;
   const scale = Math.max(cw / FW, ch / FH);
-  const sw = FW * scale;
-  const sh = FH * scale;
-  const dx = (cw - sw) / 2;
-  const dy = (ch - sh) / 2;
+  const sw = FW * scale, sh = FH * scale;
+  const dx = (cw - sw) / 2, dy = (ch - sh) / 2;
   ctx.clearRect(0, 0, cw, ch);
   ctx.drawImage(img, dx, dy, sw, sh);
 }
 
-// ─── Frame loading ──────────────────────────────────────────────────────────
 function loadFrame(n) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const img = new Image();
     const num = String(n + 1).padStart(4, '0');
     img.src = `./frames/frame-${num}.jpg`;
     img.onload  = () => { FRAMES[n] = img; loaded++; resolve(); };
-    img.onerror = () => { loaded++; resolve(); }; // non-fatal
+    img.onerror = () => { loaded++; resolve(); };
   });
 }
 
 async function preloadAll() {
   for (let i = 0; i < TOTAL; i += BATCH) {
     const batch = [];
-    for (let j = i; j < Math.min(i + BATCH, TOTAL); j++) {
-      batch.push(loadFrame(j));
-    }
+    for (let j = i; j < Math.min(i + BATCH, TOTAL); j++) batch.push(loadFrame(j));
     await Promise.all(batch);
 
     const pct = Math.round((loaded / TOTAL) * 100);
     loadBar.style.width = pct + '%';
-    const msgs = ['Initializing neural link','Mapping memory regions','Charging synaptic cores','Calibrating embeddings','Synchronizing vault'];
+
+    const msgs = [
+      i18n[currentLang]['load-0'],
+      i18n[currentLang]['load-1'],
+      i18n[currentLang]['load-2'],
+      i18n[currentLang]['load-3'],
+      i18n[currentLang]['load-4'],
+    ];
     const msgIdx = Math.min(Math.floor(pct / 20), msgs.length - 1);
     loadPct.textContent = msgs[msgIdx] + '… ' + pct + '%';
 
-    // Draw first available frame for preview
-    if (i === 0 && FRAMES[0]) { drawFrame(FRAMES[0]); }
+    if (i === 0 && FRAMES[0]) drawFrame(FRAMES[0]);
   }
 
-  // Done — remove loading screen
   loadBar.style.width = '100%';
-  loadPct.textContent = 'Neural link established · 100%';
+  loadPct.textContent = (i18n[currentLang]['load-done'] || 'Neural link established') + ' · 100%';
   await new Promise(r => setTimeout(r, 450));
   loadEl.classList.add('hidden');
   setTimeout(() => { loadEl.style.display = 'none'; }, 700);
 }
 
-// ─── Scroll logic ───────────────────────────────────────────────────────────
+// ─── Scroll ─────────────────────────────────────────────────────────
 function getScrollProgress() {
   const container = document.getElementById('scroll-container');
   const rect = container.getBoundingClientRect();
@@ -653,20 +1131,14 @@ function getScrollProgress() {
 }
 
 window.addEventListener('scroll', () => {
-  scrollProg = getScrollProgress();
+  scrollProg   = getScrollProgress();
   currentFrame = Math.min(Math.floor(scrollProg * TOTAL), TOTAL - 1);
-
-  // Scroll progress bar
   progBar.style.width = (scrollProg * 100) + '%';
-
-  // Hide scroll hint after first scroll
   if (scrollProg > 0.02) scrollHint.classList.add('hidden');
-
-  // Phase cards
   updatePhases(scrollProg);
 }, { passive: true });
 
-// ─── Phase overlay cards ────────────────────────────────────────────────────
+// ─── Phase cards ─────────────────────────────────────────────────────
 const phases = [
   { el: document.getElementById('phase-1'), start: 0.04, end: 0.22 },
   { el: document.getElementById('phase-2'), start: 0.26, end: 0.44 },
@@ -676,28 +1148,21 @@ const phases = [
 
 function updatePhases(p) {
   for (const phase of phases) {
-    if (p >= phase.start && p <= phase.end) {
-      phase.el.classList.add('visible');
-    } else {
-      phase.el.classList.remove('visible');
-    }
+    phase.el.classList.toggle('visible', p >= phase.start && p <= phase.end);
   }
 }
 
-// ─── rAF render loop ───────────────────────────────────────────────────────
+// ─── rAF render loop ─────────────────────────────────────────────────
 function tick() {
   if (currentFrame !== drawnFrame && FRAMES[currentFrame]) {
-    // Subtle rotation: -4deg → +8deg over full scroll
     const rotation = -4 + scrollProg * 12;
     canvas.style.transform = `translate(-50%, -50%) rotate(${rotation.toFixed(2)}deg)`;
-
     drawFrame(FRAMES[currentFrame]);
     drawnFrame = currentFrame;
   }
   requestAnimationFrame(tick);
 }
 
-// ─── Boot ───────────────────────────────────────────────────────────────────
 preloadAll();
 tick();
 </script>
